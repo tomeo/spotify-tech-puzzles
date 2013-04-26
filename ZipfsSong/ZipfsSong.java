@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.PriorityQueue;
+import java.lang.StringBuilder;
 
 public class ZipfsSong {
 	public static void main (String[] args) {
@@ -10,12 +11,19 @@ public class ZipfsSong {
 		ZipfList songs = new ZipfList(m);
 		int pos = 1;
 		while (sc.hasNextLine()) {
-			songs.add(new Song(sc.nextLine().split(" "), pos++));
+			songs.offer(new Song(sc.nextLine().split(" "), pos++));
 		}
 
-		for (Song song : songs) {
-			System.out.println(song);
+		Song[] out = new Song[m];
+		for (int i = m-1; i >= 0; i--) {
+			out[i] = songs.poll();
 		}
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < m; i++) {
+			sb.append(out[i] + "\n");
+		}
+		System.out.println(sb.toString());
 	}
 }
 
@@ -47,21 +55,22 @@ class Song {
 	}
 }
 
-class ZipfList extends TreeSet<Song> {
+class ZipfList extends PriorityQueue<Song> {
 	private int maxSize;
 
 	public ZipfList(int maxSize) {
-		super(new SongComparator());
+		super(maxSize, new SongComparator());
 		this.maxSize = maxSize;
 	}
 
-	public boolean add(Song song) {
+	public boolean offer(Song song) {
 		if (this.size() < maxSize) {
-			super.add(song);
+			super.offer(song);
 			return true;
-		} else if (this.comparator().compare(song, this.last()) < 0) {
-			this.pollLast();
-			super.add(song);
+		} 
+		else if (this.comparator().compare(song, this.peek()) > 0) {
+			this.remove();
+			super.offer(song);
 			return true;
 		}
 		return false;
@@ -70,7 +79,7 @@ class ZipfList extends TreeSet<Song> {
 
 class SongComparator implements Comparator<Song> {
 	public int compare(Song s1, Song s2) {
-		int qualComp = s2.compareQuality(s1);
-		return (qualComp == 0) ? s1.comparePosition(s2) : qualComp;
+		int qualComp = s1.compareQuality(s2);
+		return (qualComp == 0) ? s2.comparePosition(s1) : qualComp;
 	}
 }
