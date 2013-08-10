@@ -7,7 +7,6 @@ public class CatVsDog {
 		int nbrTests = Integer.parseInt(sc.nextLine());
 		String[] info;
 
-		Vote currentVote;
 		VoteBooth booth;
 		for(int i = 0; i < nbrTests; i++) {
 			booth = new VoteBooth();
