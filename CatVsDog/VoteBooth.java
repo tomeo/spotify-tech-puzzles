@@ -8,11 +8,17 @@ public class VoteBooth extends ArrayList<VoteGroup> {
 	}
 
 	public void add(Vote vote) {
+		ArrayList<VoteGroup> tmp = new ArrayList<VoteGroup>();
 		for(VoteGroup group : this) {
-			group.tryAdd(vote);
-			if(group.size() > this.max) this.max = group.size();
+			if (group.compatible(vote)) {
+				VoteGroup newGroup = new VoteGroup(vote, group);
+				tmp.add(newGroup);
+				if(newGroup.size() > this.max) this.max = newGroup.size();
+			}
 		}
 		super.add(new VoteGroup(vote));
+		super.addAll(tmp);
+		System.out.println("VG size: " + this.size());
 	}
 
 	public int getMax() {

@@ -12,12 +12,17 @@ public class VoteGroup {
 		this.add(vote);
 	}
 
-	public void tryAdd(Vote vote) {
-		if(!this.no.contains(vote.getYes()) &&
-		   !this.yes.contains(vote.getNo())) {
-			this.add(vote);
-		}
-	}	
+	public VoteGroup(Vote vote, VoteGroup group) {
+		this.no = group.no;
+		this.yes = group.yes;
+		this.size = group.size;
+		this.add(vote);
+	}
+
+	public boolean compatible(Vote vote) {
+		return !this.no.contains(vote.getYes()) &&
+		   	   !this.yes.contains(vote.getNo());
+	}
 
 	private void add(Vote vote) {
 		this.yes.add(vote.getYes());

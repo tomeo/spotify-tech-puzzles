@@ -16,7 +16,13 @@ public class CatVsDog {
 				info = sc.nextLine().split(" ");	
 				booth.add(new Vote(info[0], info[1]));
 			}
-			System.out.println(booth.getMax());
+			// TODO: VoteBooth so that it handles 0 voters
+			if (voters == 0) {
+				System.out.println(0);	
+			} else {
+				System.out.println(booth.getMax());	
+			}
+			
 		}
 	}
 }
